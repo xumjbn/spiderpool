@@ -39,7 +39,6 @@ nav:
       - usage/get-started-calico.md
       - usage/get-started-weave.md
       - usage/spider-subnet.md
-      - usage/multiple-subnet.md
       - usage/ippool-multi.md
       - usage/ippool-namespace.md
       - usage/ippool-affinity-namespace.md
