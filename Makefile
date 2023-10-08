@@ -325,15 +325,15 @@ e2e_test:
 
 .PHONY: e2e_test_underlay
 e2e_test_underlay:
-	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=false -e E2E_SPIDERPOOL_ENABLE_SUBNET=true
+	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=false -e E2E_SPIDERPOOL_ENABLE_SUBNET=true -e INSTALL_MULTUS=true
 
 .PHONY: e2e_test_calico
 e2e_test_calico:
-	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=true -e INSTALL_CALICO=true -e INSTALL_CILIUM=false -e E2E_GINKGO_LABELS=overlay
+	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=true -e INSTALL_CALICO=true -e INSTALL_CILIUM=false -e E2E_GINKGO_LABELS=overlay -e INSTALL_MULTUS=true
 
 .PHONY: e2e_test_cilium
 e2e_test_cilium:
-	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=true -e INSTALL_CALICO=false -e INSTALL_CILIUM=true -e E2E_GINKGO_LABELS=overlay
+	$(QUIET)  make e2e_test -e INSTALL_OVERLAY_CNI=true -e INSTALL_CALICO=false -e INSTALL_CILIUM=true -e E2E_GINKGO_LABELS=overlay -e INSTALL_MULTUS=true
 
 
 .PHONY: preview_doc

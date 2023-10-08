@@ -76,6 +76,13 @@ ifeq ($(INSTALL_SPIDERDOCTOR),true)
 		HTTP_PROXY=$(HTTP_PROXY) \
 		$(QUIET) bash scripts/install-spiderdoctor.sh
 endif
+ifeq ($(INSTALL_KUBEVIRT),true)
+	@echo -e "\033[35m [Step 10] Install kubevirt \033[0m"
+	E2E_KUBECONFIG=$(E2E_KUBECONFIG)  \
+		E2E_CLUSTER_NAME=$(E2E_CLUSTER_NAME) \
+		HTTP_PROXY=$(HTTP_PROXY) \
+		$(QUIET) bash scripts/install-kubevirt.sh
+endif
 	@ echo "wait for the cluster ready" ; \
 		TEST_IMAGE_NAME=$(TEST_IMAGE_NAME) \
 		RELEASE_NAMESPACE=$(RELEASE_NAMESPACE) \
