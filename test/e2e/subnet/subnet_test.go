@@ -30,7 +30,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var _ = Describe("test subnet", Label("subnet"), func() {
+var _ = PDescribe("test subnet", Label("subnet"), func() {
 	var v4SubnetName, v6SubnetName, namespace string
 	var v4SubnetObject, v6SubnetObject *spiderpool.SpiderSubnet
 

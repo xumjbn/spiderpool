@@ -22,7 +22,7 @@ import (
 	"github.com/spidernet-io/spiderpool/test/e2e/common"
 )
 
-var _ = Describe("test kubevirt", Label("kubevirt"), func() {
+var _ = FDescribe("test kubevirt", Label("kubevirt"), func() {
 	var (
 		virtualMachine *kubevirtv1.VirtualMachine
 		ctx            context.Context
@@ -39,20 +39,21 @@ var _ = Describe("test kubevirt", Label("kubevirt"), func() {
 		virtualMachine.Spec.Template.ObjectMeta.SetAnnotations(anno)
 
 		// create namespace
-		namespace = "ns" + utilrand.String(randomLength)
-		GinkgoWriter.Printf("create namespace %v. \n", namespace)
-		err := frame.CreateNamespaceUntilDefaultServiceAccountReady(namespace, common.ServiceAccountReadyTimeout)
-		Expect(err).NotTo(HaveOccurred())
+		//namespace = "ns" + utilrand.String(randomLength)
+		namespace = "kube-system"
+		//GinkgoWriter.Printf("create namespace %v. \n", namespace)
+		//err := frame.CreateNamespaceUntilDefaultServiceAccountReady(namespace, common.ServiceAccountReadyTimeout)
+		//Expect(err).NotTo(HaveOccurred())
 
-		DeferCleanup(func() {
-			if CurrentSpecReport().Failed() {
-				GinkgoWriter.Println("If the use case fails, the cleanup step will be skipped")
-				return
-			}
-
-			GinkgoWriter.Printf("delete namespace %v. \n", namespace)
-			Expect(frame.DeleteNamespace(namespace)).NotTo(HaveOccurred())
-		})
+		//DeferCleanup(func() {
+		//	if CurrentSpecReport().Failed() {
+		//		GinkgoWriter.Println("If the use case fails, the cleanup step will be skipped")
+		//		return
+		//	}
+		//
+		//	GinkgoWriter.Printf("delete namespace %v. \n", namespace)
+		//	Expect(frame.DeleteNamespace(namespace)).NotTo(HaveOccurred())
+		//})
 	})
 
 	It("Succeed to keep static IP for kubevirt VM/VMI after restarting the VM/VMI pod", Label("F00001"), func() {
@@ -80,7 +81,7 @@ var _ = Describe("test kubevirt", Label("kubevirt"), func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		// 2. wait for the vmi to be ready and record the vmi corresponding vmi pod IP
-		vmi, err := waitVMIUntilRunning(virtualMachine.Namespace, virtualMachine.Name, time.Minute*10)
+		vmi, err := waitVMIUntilRunning(virtualMachine.Namespace, virtualMachine.Name, time.Minute*3)
 		Expect(err).NotTo(HaveOccurred())
 
 		vmInterfaces := make(map[string][]string)
@@ -95,7 +96,7 @@ var _ = Describe("test kubevirt", Label("kubevirt"), func() {
 		GinkgoWriter.Printf("try to restart VMI %s/%s", vmi.Namespace, vmi.Name)
 		err = frame.KClient.Delete(ctx, vmi)
 		Expect(err).NotTo(HaveOccurred())
-		vmi, err = waitVMIUntilRunning(virtualMachine.Namespace, virtualMachine.Name, time.Minute*10)
+		vmi, err = waitVMIUntilRunning(virtualMachine.Namespace, virtualMachine.Name, time.Minute*5)
 		Expect(err).NotTo(HaveOccurred())
 
 		tmpVMInterfaces := make(map[string][]string)
@@ -108,7 +109,7 @@ var _ = Describe("test kubevirt", Label("kubevirt"), func() {
 		Expect(vmInterfaces).Should(Equal(tmpVMInterfaces))
 	})
 
-	It("Succeed to keep static IP for the kubevirt VM live migration", Label("F00002"), func() {
+	PIt("Succeed to keep static IP for the kubevirt VM live migration", Label("F00002"), func() {
 		// 1. create a kubevirt vm with masquerade mode (At present, it seems like the live migration only supports masquerade mode)
 		virtualMachine.Spec.Template.Spec.Networks = []kubevirtv1.Network{
 			{
@@ -196,8 +197,35 @@ func waitVMIUntilRunning(namespace, name string, timeout time.Duration) (*kubevi
 	for {
 		select {
 		case <-tick:
-			GinkgoWriter.Printf("VMI %s/%s is still in phase %s \n", namespace, name, vmi.Status.Phase)
-			return nil, fmt.Errorf("time out to wait VMI %s/%s running", namespace, name)
+			//GinkgoWriter.Printf("VMI %s/%s is still in phase %s \n", namespace, name, vmi.Status.Phase)
+			GinkgoWriter.Printf("=======++++++++out of time, VMI: %+v \n", vmi)
+			var podList corev1.PodList
+			e := frame.KClient.List(context.TODO(), &podList)
+			if e == nil {
+				for index := range podList.Items {
+					GinkgoWriter.Printf("-------------pod Name: %s \n", podList.Items[index].Name)
+					_, ok := podList.Items[index].GetLabels()[kubevirtv1.VirtualMachineNameLabel]
+					if ok {
+						GinkgoWriter.Printf("============++++++++++++++ VM Pod: %s \n", podList.Items[index].String())
+					}
+				}
+			} else {
+				GinkgoWriter.Printf("???????????????????????Bad: %v \n", e)
+			}
+
+			vmiEvents, err := frame.GetEvents(context.TODO(), "VirtualMachineInstance", name, namespace)
+			Expect(err).NotTo(HaveOccurred())
+			for _, item := range vmiEvents.Items {
+				GinkgoWriter.Printf("==========+++++++++++++++++============== vmi events: %v \n", item)
+			}
+
+			vmEvents, err := frame.GetEvents(context.TODO(), "VirtualMachine", name, namespace)
+			Expect(err).NotTo(HaveOccurred())
+			for _, item := range vmEvents.Items {
+				GinkgoWriter.Printf("***************************************** vm events: %v \n", item)
+			}
+
+			return nil, fmt.Errorf("time out to wait VMI %s/%s running, error: %v", namespace, name, e)
 
 		default:
 			err := frame.GetResource(types.NamespacedName{

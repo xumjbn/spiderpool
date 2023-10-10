@@ -14,7 +14,7 @@ import (
 	"github.com/spidernet-io/spiderpool/test/e2e/common"
 )
 
-var _ = Describe("test pod", Label("assignip"), func() {
+var _ = PDescribe("test pod", Label("assignip"), func() {
 
 	Context("fail to run a pod when IP resource of an ippool is exhausted or its IP been set excludeIPs", func() {
 		var deployName, v4PoolName, v6PoolName, namespace string

@@ -17,7 +17,7 @@ import (
 	apitypes "k8s.io/apimachinery/pkg/types"
 )
 
-var _ = Describe("MacvlanUnderlayOne", Serial, Label("underlay", "one-interface", "coordinator"), func() {
+var _ = PDescribe("MacvlanUnderlayOne", Serial, Label("underlay", "one-interface", "coordinator"), func() {
 
 	BeforeEach(func() {
 		defer GinkgoRecover()

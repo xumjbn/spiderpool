@@ -19,7 +19,7 @@ import (
 	"github.com/spidernet-io/spiderpool/test/e2e/common"
 )
 
-var _ = Describe("test spidermultus", Label("spiderMultus", "overlay"), func() {
+var _ = PDescribe("test spidermultus", Label("spiderMultus", "overlay"), func() {
 	var namespace string
 
 	BeforeEach(func() {

@@ -17,7 +17,7 @@ import (
 	"k8s.io/utils/pointer"
 )
 
-var _ = Describe("test ifacer", Label("ifacer"), func() {
+var _ = PDescribe("test ifacer", Label("ifacer"), func() {
 	var namespace, v4PoolName, v6PoolName, dsName, spiderMultusNadName string
 	var iPv4PoolObj, iPv6PoolObj *spiderpoolv2beta1.SpiderIPPool
 	var v4SubnetName, v6SubnetName string

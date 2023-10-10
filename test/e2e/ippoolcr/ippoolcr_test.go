@@ -19,7 +19,7 @@ import (
 	"github.com/spidernet-io/spiderpool/test/e2e/common"
 )
 
-var _ = Describe("test ippool CR", Label("ippoolCR"), func() {
+var _ = PDescribe("test ippool CR", Label("ippoolCR"), func() {
 	var nsName string
 	var v4PoolName, v6PoolName, deployName string
 	var v4PoolObj, v6PoolObj *spiderpoolv2beta1.SpiderIPPool

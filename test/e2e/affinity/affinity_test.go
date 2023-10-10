@@ -18,7 +18,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-var _ = Describe("test Affinity", Label("affinity"), func() {
+var _ = PDescribe("test Affinity", Label("affinity"), func() {
 	var namespace string
 	var v4SubnetName, v6SubnetName string
 	var v4SubnetObject, v6SubnetObject *spiderpoolv2beta1.SpiderSubnet

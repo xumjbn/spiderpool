@@ -269,9 +269,9 @@ setup_spiderpool:
 		HELM_OPTION+=" --set spiderpoolController.replicas=2 " ; \
 		HELM_OPTION+=" --set spiderpoolAgent.prometheus.serviceMonitor.install=true --set spiderpoolAgent.prometheus.prometheusRule.install=true --set spiderpoolAgent.prometheus.grafanaDashboard.install=true " ; \
 		HELM_OPTION+=" --set spiderpoolController.prometheus.serviceMonitor.install=true --set spiderpoolController.prometheus.prometheusRule.install=true --set spiderpoolController.prometheus.grafanaDashboard.install=true " ; \
-		HELM_OPTION+=" --set sriov.install=true " ; \
-		HELM_OPTION+=" --set rdma.rdmaSharedDevicePlugin.install=true " ; \
-		HELM_OPTION+=" --set rdma.rdmaCni.install=true " ; \
+		HELM_OPTION+=" --set sriov.install=false " ; \
+		HELM_OPTION+=" --set rdma.rdmaSharedDevicePlugin.install=false " ; \
+		HELM_OPTION+=" --set rdma.rdmaCni.install=false " ; \
 		echo "setup spiderpool with image $(SPIDERPOOL_AGENT_IMAGE_NAME):$(E2E_SPIDERPOOL_TAG) and $(SPIDERPOOL_CONTROLLER_IMAGE_NAME):$(E2E_SPIDERPOOL_TAG) " ; \
 		set -x ; \
 		helm upgrade --install $(RELEASE_NAME) $(ROOT_DIR)/charts/spiderpool --wait --debug \

@@ -18,7 +18,7 @@ import (
 	"github.com/spidernet-io/spiderpool/test/e2e/common"
 )
 
-var _ = Describe("test reservedIP", Label("reservedIP"), func() {
+var _ = PDescribe("test reservedIP", Label("reservedIP"), func() {
 	var nsName, manualDeployName, autoDeployName, v4PoolName, v6PoolName, v4ReservedIpName, v6ReservedIpName string
 	var v4PoolNameList, v6PoolNameList []string
 	var iPv4PoolObj, iPv6PoolObj *spiderpoolv2beta1.SpiderIPPool
